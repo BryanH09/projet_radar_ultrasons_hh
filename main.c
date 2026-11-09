@@ -1,5 +1,6 @@
  #include "stm32f7xx.h"                  // Device header
 
+void Init_Ethernet (void);
 extern void configuration_overclock(void);
 extern int Init_GUIThread (void);
 extern void Init_Ethernet (void);
@@ -10,13 +11,6 @@ extern void Init_Ethernet (void);
 #ifdef RTE_CMSIS_RTOS2                  // when RTE component CMSIS RTOS2 is used
 #include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 #endif
-
-// Prototypes des fonctions
-
-void init_servo(void);
-void init_sensor_ultrasons(void);
-void servo_set_angle(int deg);
-void distance_cm(void);
 
 /*----------------------------------------------------------------------------
  *      Tâche de test (vide) : à compléter par les étudiants
@@ -33,24 +27,6 @@ static void Thread_Test (void *argument)
   {
     // Votre boucle de test ici (mesure de distance, balayage du servo, etc.)
 
-		// Debut balayage 
-		
-		for(int i=0; i<180; i++)
-		{
-			servo_set_angle(i);
-			osDelay(100); 
-		}
-		
-		for(int i=180; i>0; i--)
-		{
-			servo_set_angle(i);
-			osDelay(100); 
-		}
-		
-		// Fin balayage
-		
-		
-		
     osDelay(100);   // période de la boucle : 100 ms
   }
 }
@@ -72,6 +48,8 @@ int main(void)
 	/**********************************
 	Début Initialisation périphérique
 	**********************************/
+	
+	
 
 	//Initialiser vos périphériques ici
 	
@@ -81,9 +59,6 @@ int main(void)
 	RCC->APB1ENR |= (1 << 29); // Activation du périphérque DAC sur la pin 29
 	RCC->APB1ENR |= (3 << 8); // Mode du broche PA4 (DAC) en mode ANALOG sur la pin 8
 	DAC->CR |= (1 << 0); // Activation de la voie du DAC (EN1 car DAC_OUTPUT1) 
-	
-	init_servo();
-	init_sensor_ultrasons();
 	
 	RCC->AHB1ENR |= (1 << 5);	// Activation du GPIOF
 	RCC->APB2ENR |= (1 << 17); // Activation du TIM10_CH1
@@ -119,53 +94,4 @@ int main(void)
   while (1)
   {
   }
-}
-
-// Codes des fonctions
-
-void init_servo(void)
-{
-	RCC->AHB1ENR |= (1 << 5); // Activation du GPIOF
-	RCC->APB2ENR |= (1 << 18); // Activation du Timer 11 
-	
-	GPIOF->MODER |= (2 << 14); // Configuration du mode en alternate
-	GPIOF->AFR[0] |= (3 << 28); // Activation, du AF3
-	
-	TIM11->CCMR1 |= (6 << 4);
-	TIM11->CCER |= (1 << 0);
-	
-	TIM11->PSC = 7;
-	TIM11->ARR = 39999;
-	TIM11->CCR1 = 4000;
-	TIM11->CR1 |= (1 << 0); //Demarrage du compteur 
-}
-
-void init_sensor_ultrasons(void)
-{
-	RCC->AHB1ENR |= (1 << 1); // Activation du GPIOB
-	RCC->APB1ENR |= (1 << 6); // Activation du TIM12
-	
-	GPIOB->MODER |= (2 << 24); // Configuration en mode alternate
-	GPIOB->AFR[1] |= (9 << 16); // Activation du AF12
-	
-	TIM12->CCMR1 |= (6 << 4);
-	TIM12->CCER |= (1 << 0);
-	
-	TIM12->PSC = 7;
-	TIM12->ARR = 39999;
-	TIM12->CCR1 = 4000;
-	TIM12->CR1 |= (1 << 0); // Demarrage du compteur 
-}
-
-
-void servo_set_angle(int deg)
-{
-	int result; 
-	
-	if(deg < 0) deg = 0;
-	if(deg > 180) deg = 180;
-	
-	result = (deg*40000) / 180;
-	
-	TIM11->CCR1 = result;
 }
