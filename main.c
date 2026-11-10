@@ -123,37 +123,38 @@ int main(void)
 
 // Codes des fonctions
 
-void init_servo(void)
+void init_servo(void) // A3
 {
 	RCC->AHB1ENR |= (1 << 5); // Activation du GPIOF
-	RCC->APB2ENR |= (1 << 18); // Activation du Timer 11 
+	RCC->APB1ENR |= (1 << 7); // Activation du Timer 13 
 	
-	GPIOF->MODER |= (2 << 14); // Configuration du mode en alternate
-	GPIOF->AFR[0] |= (3 << 28); // Activation, du AF3
+	GPIOF->MODER |= (2 << 16); // Configuration du mode en alternate
+	GPIOF->AFR[1] |= (9 << 0); // Activation, du AF9
 	
-	TIM11->CCMR1 |= (6 << 4);
-	TIM11->CCER |= (1 << 0);
+	TIM13->CCMR1 |= (6 << 4);
+	TIM13->CCER |= (1 << 0);
 	
-	TIM11->PSC = 7;
-	TIM11->ARR = 39999;
-	TIM11->CCR1 = 4000;
-	TIM11->CR1 |= (1 << 0); //Demarrage du compteur 
+	TIM13->PSC = 31; // Après verif,
+	TIM13->ARR = 62499;
+	TIM13->CCR1 = 1500;
+	
+	TIM13->CR1 |= (1 << 0); //Demarrage du compteur 
 }
 
-void init_sensor_ultrasons(void)
+void init_sensor_ultrasons(void) // D12
 {
 	RCC->AHB1ENR |= (1 << 1); // Activation du GPIOB
 	RCC->APB1ENR |= (1 << 6); // Activation du TIM12
 	
-	GPIOB->MODER |= (2 << 24); // Configuration en mode alternate
-	GPIOB->AFR[1] |= (9 << 16); // Activation du AF12
+	GPIOB->MODER |= (2 << 28); // Configuration en mode alternate
+	GPIOB->AFR[1] |= (9 << 24); // Activation du AF9
 	
 	TIM12->CCMR1 |= (6 << 4);
 	TIM12->CCER |= (1 << 0);
 	
-	TIM12->PSC = 7;
-	TIM12->ARR = 39999;
-	TIM12->CCR1 = 4000;
+	TIM12->PSC = 39;
+	TIM12->ARR = 62499;
+	TIM12->CCR1 = 25;
 	TIM12->CR1 |= (1 << 0); // Demarrage du compteur 
 }
 
@@ -165,7 +166,11 @@ void servo_set_angle(int deg)
 	if(deg < 0) deg = 0;
 	if(deg > 180) deg = 180;
 	
-	result = (deg*40000) / 180;
+	result = 3125 + (deg*3125) / 180;
 	
-	TIM11->CCR1 = result;
+	TIM13->CCR1 = result;
+}
+
+void distance_cm(void)
+{
 }
