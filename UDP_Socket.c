@@ -11,6 +11,7 @@
 #include "stm32f7xx.h"                  // Device header
 #include "AppWizard.h"
 #include <stdio.h>
+#include <string.h>
 
 int32_t udp_sock;  
 // UDP socket handle
@@ -33,17 +34,17 @@ uint32_t udp_cb_func (int32_t socket, const  NET_ADDR *addr, const uint8_t *buf,
 		cmd[i]= '\0';
 		if ((sscanf(cmd, "ANGLE %d",&angle))==1)
 		{
-			sprintf(sendbuf,"angle %d",angle);
-			
+			sprintf((char *)sendbuf,"OKKK");
 			
 		}
-		if (cmd[0]=="D")
+		if (cmd[0]=='D')  // comparer 2 CHAINES : strcmp(cmd,"DIST")==0 
 		{
-			sprintf(sendbuf,"distance = %d",dist);
+			dist=25;
+			sprintf((char *)sendbuf,"distance = %d",dist);
 			
 	
 		}
-		netUDP_Send (udp_sock, &addr, sendbuf, 32);
+		netUDP_Send (udp_sock, addr, sendbuf, strlen((char *)sendbuf));
 		
 		
 	}
@@ -56,7 +57,7 @@ void Init_Ethernet (void) {
  
   netInitialize ();
 	
-  // Initialize UDP socket and open port 2000
+  // Initialize UDP socket and open port 5001
   udp_sock = netUDP_GetSocket (udp_cb_func);
   if (udp_sock > 0) {
     netUDP_Open (udp_sock, 5001);
