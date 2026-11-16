@@ -34,11 +34,11 @@ uint32_t udp_cb_func (int32_t socket, const  NET_ADDR *addr, const uint8_t *buf,
 		}
 		cmd[i]= '\0';
 		if ((sscanf(cmd, "ANGLE %d", &angle)) == 1)
-{
-    mode_manuel = 1;          // on arrête le balayage auto
-    servo_set_angle(angle);   // le moteur va à l'angle reçu
-    sprintf((char *)sendbuf, "OK angle = %d", angle);
-}
+		{
+			mode_manuel = 1;          // on arrête le balayage auto
+			servo_set_angle(angle);   // le moteur va à l'angle reçu
+			sprintf((char *)sendbuf, "OK angle = %d", angle);
+		}
 		if (cmd[0]=='D')  // comparer 2 CHAINES : strcmp(cmd,"DIST")==0 ne marche pas 
 		{
 			dist=25;
