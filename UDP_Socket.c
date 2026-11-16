@@ -12,7 +12,8 @@
 #include "AppWizard.h"
 #include <stdio.h>
 #include <string.h>
-
+extern void servo_set_angle(int deg);   // défini dans main.c
+extern volatile int mode_manuel;        // défini dans main.c
 int32_t udp_sock;  
 // UDP socket handle
 uint8_t *sendbuf;
@@ -32,11 +33,12 @@ uint32_t udp_cb_func (int32_t socket, const  NET_ADDR *addr, const uint8_t *buf,
 			cmd[i]=buf[i];
 		}
 		cmd[i]= '\0';
-		if ((sscanf(cmd, "ANGLE %d",&angle))==1)
-		{
-			sprintf((char *)sendbuf,"OKKK");
-			
-		}
+		if ((sscanf(cmd, "ANGLE %d", &angle)) == 1)
+{
+    mode_manuel = 1;          // on arrête le balayage auto
+    servo_set_angle(angle);   // le moteur va à l'angle reçu
+    sprintf((char *)sendbuf, "OK angle = %d", angle);
+}
 		if (cmd[0]=='D')  // comparer 2 CHAINES : strcmp(cmd,"DIST")==0 ne marche pas 
 		{
 			dist=25;

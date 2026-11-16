@@ -18,7 +18,7 @@ void init_sensor_ultrasons(void);
 void servo_set_angle(int deg);
 void distance_cm(void);
 void init_interruption(void);
-
+volatile int mode_manuel = 0;   // 0 = balayage auto, 1 = angle reçu par UDP
 /*----------------------------------------------------------------------------
  *      Tâche de test (vide) : à compléter par les étudiants
  *---------------------------------------------------------------------------*/
@@ -31,29 +31,24 @@ static void Thread_Test (void *argument)
   // Initialisations propres à la tâche (si besoin) ici
 
   while (1)
-  {
-    // Votre boucle de test ici (mesure de distance, balayage du servo, etc.)
-
-		// Debut balayage 
-		
-		for(int i=0; i<180; i++)
-		{
-			servo_set_angle(i);
-			osDelay(100); 
-		}
-		
-		for(int i=180; i>0; i--)
-		{
-			servo_set_angle(i);
-			osDelay(100); 
-		}
-		
-		// Fin balayage
-		
-		
-		
-    osDelay(100);   // période de la boucle : 100 ms
-  }
+{
+    if (mode_manuel == 0)
+    {
+        // Debut balayage
+        for (int i = 0; i < 180 && mode_manuel == 0; i++)
+        {
+            servo_set_angle(i);
+            osDelay(100);
+        }
+        for (int i = 180; i > 0 && mode_manuel == 0; i--)
+        {
+            servo_set_angle(i);
+            osDelay(100);
+        }
+        // Fin balayage
+    }
+    osDelay(100);
+}
 }
 
 static int Init_TestThread (void)
