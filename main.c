@@ -1,5 +1,6 @@
  #include "stm32f7xx.h"                  // Device header
 
+void Init_Ethernet (void);
 extern void configuration_overclock(void);
 extern int Init_GUIThread (void);
 extern void Init_Ethernet (void);
@@ -11,15 +12,8 @@ extern void Init_Ethernet (void);
 #include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 #endif
 
-// Prototypes des fonctions
-
-void init_servo(void);
-void init_sensor_ultrasons(void);
-void servo_set_angle(int deg);
-void distance_cm(void);
-
 /*----------------------------------------------------------------------------
- *      Tâche de test (vide) : à compléter par les étudiants
+ *      Tï¿½che de test (vide) : ï¿½ complï¿½ter par les ï¿½tudiants
  *---------------------------------------------------------------------------*/
 osThreadId_t tid_Test;
 
@@ -27,31 +21,13 @@ static void Thread_Test (void *argument)
 {
   (void)argument;
 
-  // Initialisations propres à la tâche (si besoin) ici
+  // Initialisations propres ï¿½ la tï¿½che (si besoin) ici
 
   while (1)
   {
     // Votre boucle de test ici (mesure de distance, balayage du servo, etc.)
 
-		// Debut balayage 
-		
-		for(int i=0; i<180; i++)
-		{
-			servo_set_angle(i);
-			osDelay(100); 
-		}
-		
-		for(int i=180; i>0; i--)
-		{
-			servo_set_angle(i);
-			osDelay(100); 
-		}
-		
-		// Fin balayage
-		
-		
-		
-    osDelay(100);   // période de la boucle : 100 ms
+    osDelay(100);   // pï¿½riode de la boucle : 100 ms
   }
 }
 
@@ -67,23 +43,22 @@ static int Init_TestThread (void)
 
 int main(void)
 {
-  configuration_overclock(); //pour pouvoir utiliser l'écran LCD
+  configuration_overclock(); //pour pouvoir utiliser l'ï¿½cran LCD
 
 	/**********************************
-	Début Initialisation périphérique
+	Dï¿½but Initialisation pï¿½riphï¿½rique
 	**********************************/
-
-	//Initialiser vos périphériques ici
 	
-	RCC->AHB1ENR |= (1 << 8); // Activation du périphérique GPIOI
+	
+
+	//Initialiser vos pï¿½riphï¿½riques ici
+	
+	RCC->AHB1ENR |= (1 << 8); // Activation du pï¿½riphï¿½rique GPIOI
 	GPIOI->MODER |= (1 << 0) | (1 << 4); // Mode du broche PI0 et PI2 en General purpose OUTPUT  
 	
-	RCC->APB1ENR |= (1 << 29); // Activation du périphérque DAC sur la pin 29
+	RCC->APB1ENR |= (1 << 29); // Activation du pï¿½riphï¿½rque DAC sur la pin 29
 	RCC->APB1ENR |= (3 << 8); // Mode du broche PA4 (DAC) en mode ANALOG sur la pin 8
 	DAC->CR |= (1 << 0); // Activation de la voie du DAC (EN1 car DAC_OUTPUT1) 
-	
-	init_servo();
-	init_sensor_ultrasons();
 	
 	RCC->AHB1ENR |= (1 << 5);	// Activation du GPIOF
 	RCC->APB2ENR |= (1 << 17); // Activation du TIM10_CH1
@@ -96,7 +71,7 @@ int main(void)
 	TIM10->CR1 |= (1 << 0); // Demarrage du compteur
 
 	/**********************************
-	Fin Initialisation périphérique
+	Fin Initialisation pï¿½riphï¿½rique
 	**********************************/
 
 	/**********************************
@@ -109,13 +84,13 @@ int main(void)
 	  /* Create thread functions that start executing */
 		Init_Ethernet();
 		Init_GUIThread();
-		Init_TestThread();   // tâche de test (boucle avec osDelay)
+		Init_TestThread();   // tï¿½che de test (boucle avec osDelay)
 
 	  /* Start thread execution */
 	  osKernelStart();
 	#endif
 
-  /* Infinite loop  (ne s'exécute pas avec le RTOS!!!)*/
+  /* Infinite loop  (ne s'exï¿½cute pas avec le RTOS!!!)*/
   while (1)
   {
   }
@@ -134,7 +109,7 @@ void init_servo(void) // A3
 	TIM13->CCMR1 |= (6 << 4);
 	TIM13->CCER |= (1 << 0);
 	
-	TIM13->PSC = 31; // Après verif,
+	TIM13->PSC = 31; // Aprï¿½s verif,
 	TIM13->ARR = 62499;
 	TIM13->CCR1 = 1500;
 	
