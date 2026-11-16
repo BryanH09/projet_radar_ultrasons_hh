@@ -28750,17 +28750,17 @@ Image Symbol Table
     [Anonymous Symbol]                       0x08080fde   Section        0  appwconf.o(.rodata.str1.1)
     [Anonymous Symbol]                       0x08080fea   Section        0  rtx_lib.o(.rodata.str1.1)
     [Anonymous Symbol]                       0x08080fff   Section        0  net_config.o(.rodata.str1.1)
-    [Anonymous Symbol]                       0x080810b6   Section        0  appwizard.o(.rodata.str1.1)
-    .L.str                                   0x080810c4   Data          11  rtx_kernel.o(.rodata.str1.4)
-    [Anonymous Symbol]                       0x080810c4   Section        0  rtx_kernel.o(.rodata.str1.4)
-    sys_fn_init                              0x080810d0   Data          36  net_config.o(.rodata.sys_fn_init)
-    [Anonymous Symbol]                       0x080810d0   Section        0  net_config.o(.rodata.sys_fn_init)
-    sys_fn_run                               0x080810f4   Data          32  net_config.o(.rodata.sys_fn_run)
-    [Anonymous Symbol]                       0x080810f4   Section        0  net_config.o(.rodata.sys_fn_run)
-    locale$$data                             0x08081134   Section      272  lc_ctype_c.o(locale$$data)
-    __lcctype_c_name                         0x08081138   Data           2  lc_ctype_c.o(locale$$data)
-    __lcctype_c_start                        0x08081140   Data           0  lc_ctype_c.o(locale$$data)
-    __lcctype_c_end                          0x08081244   Data           0  lc_ctype_c.o(locale$$data)
+    [Anonymous Symbol]                       0x080810b4   Section        0  appwizard.o(.rodata.str1.1)
+    .L.str                                   0x080810c0   Data          11  rtx_kernel.o(.rodata.str1.4)
+    [Anonymous Symbol]                       0x080810c0   Section        0  rtx_kernel.o(.rodata.str1.4)
+    sys_fn_init                              0x080810cc   Data          36  net_config.o(.rodata.sys_fn_init)
+    [Anonymous Symbol]                       0x080810cc   Section        0  net_config.o(.rodata.sys_fn_init)
+    sys_fn_run                               0x080810f0   Data          32  net_config.o(.rodata.sys_fn_run)
+    [Anonymous Symbol]                       0x080810f0   Section        0  net_config.o(.rodata.sys_fn_run)
+    locale$$data                             0x08081130   Section      272  lc_ctype_c.o(locale$$data)
+    __lcctype_c_name                         0x08081134   Data           2  lc_ctype_c.o(locale$$data)
+    __lcctype_c_start                        0x0808113c   Data           0  lc_ctype_c.o(locale$$data)
+    __lcctype_c_end                          0x08081240   Data           0  lc_ctype_c.o(locale$$data)
     Desc                                     0x2000c000   Data        9408  emac_stm32f7xx.o(.bss.ARM.__at_0x2000C000)
     [Anonymous Symbol]                       0x2000c000   Section        0  emac_stm32f7xx.o(.bss.ARM.__at_0x2000C000)
     [Anonymous Symbol]                       0x20010000   Section        0  gui_core.o(.data..L_MergedGlobals)
@@ -30910,9 +30910,9 @@ Image Symbol Table
     net_udp_config                           0x08080f1c   Data          12  net_config.o(.rodata.net_udp_config)
     netif_getopt_func                        0x08080f28   Data          16  net_config.o(.rodata.netif_getopt_func)
     osRtxUserSVC                             0x08080f38   Data           4  rtx_lib.o(.rodata.osRtxUserSVC)
-    Region$$Table$$Base                      0x08081114   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08081134   Number         0  anon$$obj.o(Region$$Table)
-    __ctype                                  0x08081141   Data           0  lc_ctype_c.o(locale$$data)
+    Region$$Table$$Base                      0x08081110   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x08081130   Number         0  anon$$obj.o(Region$$Table)
+    __ctype                                  0x0808113d   Data           0  lc_ctype_c.o(locale$$data)
     GUI__pFontDefault                        0x20010000   Data           4  gui_core.o(.data..L_MergedGlobals)
     GUI__ColorDefault                        0x20010004   Data           4  gui_core.o(.data..L_MergedGlobals)
     GUI__BkColorDefault                      0x20010008   Data           4  gui_core.o(.data..L_MergedGlobals)
@@ -31052,9 +31052,9 @@ Memory Map of the image
 
   Image Entry point : 0x080001c9
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00081a28, Max: 0x00100000, ABSOLUTE, COMPRESSED[0x00081530])
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00081a20, Max: 0x00100000, ABSOLUTE, COMPRESSED[0x00081528])
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00081244, Max: 0x00100000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00081240, Max: 0x00100000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -34323,26 +34323,26 @@ Memory Map of the image
     0x08080f9c   0x08080f9c   0x00000042   Data   RO           66    .rodata.str1.1      appw_maintask.o
     0x08080fde   0x08080fde   0x0000000c   Data   RO           82    .rodata.str1.1      appwconf.o
     0x08080fea   0x08080fea   0x00000015   Data   RO          955    .rodata.str1.1      rtx_lib.o
-    0x08080fff   0x08080fff   0x000000b7   Data   RO         2628    .rodata.str1.1      net_config.o
-    0x080810b6   0x080810b6   0x0000000b   Data   RO         2824    .rodata.str1.1      GUI_CM4F_L.lib(appwizard.o)
-    0x080810c1   0x080810c1   0x00000003   PAD
-    0x080810c4   0x080810c4   0x0000000b   Data   RO          920    .rodata.str1.4      rtx_kernel.o
-    0x080810cf   0x080810cf   0x00000001   PAD
-    0x080810d0   0x080810d0   0x00000024   Data   RO         2662    .rodata.sys_fn_init  net_config.o
-    0x080810f4   0x080810f4   0x00000020   Data   RO         2663    .rodata.sys_fn_run  net_config.o
-    0x08081114   0x08081114   0x00000020   Data   RO        11479    Region$$Table       anon$$obj.o
-    0x08081134   0x08081134   0x00000110   Data   RO        11350    locale$$data        c_w.l(lc_ctype_c.o)
+    0x08080fff   0x08080fff   0x000000b5   Data   RO         2628    .rodata.str1.1      net_config.o
+    0x080810b4   0x080810b4   0x0000000b   Data   RO         2824    .rodata.str1.1      GUI_CM4F_L.lib(appwizard.o)
+    0x080810bf   0x080810bf   0x00000001   PAD
+    0x080810c0   0x080810c0   0x0000000b   Data   RO          920    .rodata.str1.4      rtx_kernel.o
+    0x080810cb   0x080810cb   0x00000001   PAD
+    0x080810cc   0x080810cc   0x00000024   Data   RO         2662    .rodata.sys_fn_init  net_config.o
+    0x080810f0   0x080810f0   0x00000020   Data   RO         2663    .rodata.sys_fn_run  net_config.o
+    0x08081110   0x08081110   0x00000020   Data   RO        11479    Region$$Table       anon$$obj.o
+    0x08081130   0x08081130   0x00000110   Data   RO        11350    locale$$data        c_w.l(lc_ctype_c.o)
 
 
-    Execution Region RW_IRAM2 (Exec base: 0x20000000, Load base: 0x08081530, Size: 0x0000e4c0, Max: 0x00010000, ABSOLUTE)
+    Execution Region RW_IRAM2 (Exec base: 0x20000000, Load base: 0x08081528, Size: 0x0000e4c0, Max: 0x00010000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x08081530   0x0000c000   PAD
+    0x20000000   0x08081528   0x0000c000   PAD
     0x2000c000        -       0x000024c0   Zero   RW         1484    .bss.ARM.__at_0x2000C000  emac_stm32f7xx.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20010000, Load base: 0x08081248, Size: 0x00010ab0, Max: 0x00040000, ABSOLUTE, COMPRESSED[0x000002e8])
+    Execution Region RW_IRAM1 (Exec base: 0x20010000, Load base: 0x08081240, Size: 0x00010ab0, Max: 0x00040000, ABSOLUTE, COMPRESSED[0x000002e8])
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -34684,7 +34684,7 @@ Image component sizes
       3376         28          0          8       1209      25208   lcdconf.o
          0          0     228817          0          0        452   logo_iut.o
        198          0          0          0          4       4359   main.o
-       458          0        671          0      14218      18260   net_config.o
+       458          0        669          0      14218      18272   net_config.o
          0          0      22420          0          0        499   nettoot_32_normal_ext_aa4.o
        140          0          0          0          1       5736   os_systick.o
        610          0         32          0         11       3736   phy_lan8742a.o
@@ -34722,7 +34722,7 @@ Image component sizes
        206         28          0          0          8       2077   udp_socket.o
 
     ----------------------------------------------------------------------
-     34082        264     302129       1336    4263962     544951   Object Totals
+     34082        264     302127       1336    4263962     544963   Object Totals
          0          0         32          0          0          0   (incl. Generated)
       1348          8          3          3         37          0   (incl. Padding)
 
@@ -35010,8 +35010,8 @@ Image component sizes
          0          0          0          0          0          0   usenofp.o
 
     ----------------------------------------------------------------------
-    179630       6200      13123        680      55158      78388   Library Totals
-       344         16          5          6      49180          0   (incl. Padding)
+    179630       6200      13121        680      55158      78388   Library Totals
+       344         16          3          6      49180          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -35023,7 +35023,7 @@ Image component sizes
       1030        148          0          0          0        892   fz_wm.l
 
     ----------------------------------------------------------------------
-    179630       6200      13123        680      55158      78388   Library Totals
+    179630       6200      13121        680      55158      78388   Library Totals
 
     ----------------------------------------------------------------------
 
@@ -35032,15 +35032,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-    213712       6464     315252       2016    4319120     616007   Grand Totals
-    213712       6464     315252        744    4319120     616007   ELF Image Totals (compressed)
-    213712       6464     315252        744          0          0   ROM Totals
+    213712       6464     315248       2016    4319120     616019   Grand Totals
+    213712       6464     315248        744    4319120     616019   ELF Image Totals (compressed)
+    213712       6464     315248        744          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)               528964 ( 516.57kB)
+    Total RO  Size (Code + RO Data)               528960 ( 516.56kB)
     Total RW  Size (RW Data + ZI Data)           4321136 (4219.86kB)
-    Total ROM Size (Code + RO Data + RW Data)     529708 ( 517.29kB)
+    Total ROM Size (Code + RO Data + RW Data)     529704 ( 517.29kB)
 
 ==============================================================================
 

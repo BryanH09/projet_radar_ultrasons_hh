@@ -37,7 +37,7 @@ uint32_t udp_cb_func (int32_t socket, const  NET_ADDR *addr, const uint8_t *buf,
 			sprintf((char *)sendbuf,"OKKK");
 			
 		}
-		if (cmd[0]=='D')  // comparer 2 CHAINES : strcmp(cmd,"DIST")==0 
+		if (cmd[0]=='D')  // comparer 2 CHAINES : strcmp(cmd,"DIST")==0 ne marche pas 
 		{
 			dist=25;
 			sprintf((char *)sendbuf,"distance = %d",dist);
@@ -57,10 +57,10 @@ void Init_Ethernet (void) {
  
   netInitialize ();
 	
-  // Initialize UDP socket and open port 5001
+  // Initialize UDP socket and open port 8001
   udp_sock = netUDP_GetSocket (udp_cb_func);
   if (udp_sock > 0) {
-    netUDP_Open (udp_sock, 5001);
+    netUDP_Open (udp_sock, 5000);
   }
 }
 
