@@ -11,57 +11,49 @@
 #include "stm32f7xx.h"                  // Device header
 #include "AppWizard.h"
 #include <stdio.h>
-#include <string.h>
-
-int32_t udp_sock;  
-// UDP socket handle
-uint8_t *sendbuf;
+ 
+int32_t udp_sock;                       // UDP socket handle
  
 // Notify the user application about UDP socket events.
 uint32_t udp_cb_func (int32_t socket, const  NET_ADDR *addr, const uint8_t *buf, uint32_t len) {
 	
   // Data received
-	int i,angle,dist;
-	char cmd[32];
-	
-	sendbuf = netUDP_GetBuffer(32);
-	if (len!=0)
-	{
-		for (i=0;i<len;i++)
-		{
-			cmd[i]=buf[i];
-		}
-		cmd[i]= '\0';
-		if ((sscanf(cmd, "ANGLE %d",&angle))==1)
-		{
-			sprintf((char *)sendbuf,"OKKK");
-			
-		}
-		if (cmd[0]=='D')  // comparer 2 CHAINES : strcmp(cmd,"DIST")==0 ne marche pas 
-		{
-			dist=25;
-			sprintf((char *)sendbuf,"distance = %d",dist);
-			
-	
-		}
-		netUDP_Send (udp_sock, addr, sendbuf, strlen((char *)sendbuf));
-		
-		
-	}
-	return (0);
+  /* Example
+  if ((buf[0] == 0x01) && (len == 2)) {
+    // Switch LEDs on and off
+  }
+  */
+  return (0);
 }
-
+ 
+// Send UDP data to destination client.
+void send_udp_data (void) {
+ 
+  if (udp_sock > 0) {
+    /* Example
+    // IPv4 address: 192.168.0.1
+    NET_ADDR addr = { NET_ADDR_IP4, 2000, 192, 168, 0, 1 };
+    uint8_t *sendbuf;
+ 
+    sendbuf = netUDP_GetBuffer (2);
+    sendbuf[0] = 0x01;
+    sendbuf[1] = 0xAA;
+ 
+    netUDP_Send (udp_sock, &addr, sendbuf, 2);
+    */
+  }
+}
  
 // Allocate and initialize the socket.
 void Init_Ethernet (void) {
  
   netInitialize ();
-	
-  // Initialize UDP socket and open port 8001
-  udp_sock = netUDP_GetSocket (udp_cb_func);
-  if (udp_sock > 0) {
-    netUDP_Open (udp_sock, 5000);
-  }
+ 
+  // Initialize UDP socket and open port 2000
+  //udp_sock = netUDP_GetSocket (udp_cb_func);
+  //if (udp_sock > 0) {
+  //  netUDP_Open (udp_sock, 2000);
+  //}
 }
 
 //! [code_UDP_Socket]
