@@ -14,6 +14,7 @@
 #include <string.h>
 extern void servo_set_angle(int deg);   // défini dans main.c
 extern volatile int mode_manuel;        // défini dans main.c
+extern int distance_cm(void);           // défini dans main.c
 int32_t udp_sock;  
 // UDP socket handle
 uint8_t *sendbuf;
@@ -41,7 +42,7 @@ uint32_t udp_cb_func (int32_t socket, const  NET_ADDR *addr, const uint8_t *buf,
 		}
 		if (cmd[0]=='D')  // comparer 2 CHAINES : strcmp(cmd,"DIST")==0 ne marche pas 
 		{
-			dist=25;
+			dist= distance_cm();;
 			sprintf((char *)sendbuf,"distance = %d",dist);
 			
 	

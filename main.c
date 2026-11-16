@@ -11,14 +11,47 @@ extern void Init_Ethernet (void);
 #include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 #endif
 
+int tempsDepart;
+int tempsFinal;
+int distanceBrute;
+int finComptage;
+
 // Prototypes des fonctions
 
 void init_servo(void);
 void init_sensor_ultrasons(void);
 void servo_set_angle(int deg);
-void distance_cm(void);
+int distance_cm(void);
 void init_interruption(void);
+
 volatile int mode_manuel = 0;   // 0 = balayage auto, 1 = angle reçu par UDP
+
+void EXTI9_5_IRQHandler(void)
+{
+if(EXTI->PR & (1 << 6))
+{
+EXTI->PR |= (1 << 6);
+
+if(GPIOG->IDR & (1 << 6))  // Lecture
+{
+tempsDepart = TIM12->CNT; // Au temps depart
+}
+else
+{
+finComptage = TIM12->CNT;
+
+if(finComptage >= tempsDepart)
+{
+tempsFinal = finComptage - tempsDepart;
+}
+else
+{
+tempsFinal = finComptage + 62500 - tempsDepart;
+}
+}
+
+}
+}
 /*----------------------------------------------------------------------------
  *      Tâche de test (vide) : à compléter par les étudiants
  *---------------------------------------------------------------------------*/
@@ -65,51 +98,52 @@ int main(void)
 {
   configuration_overclock(); //pour pouvoir utiliser l'écran LCD
 
-	/**********************************
-	Début Initialisation périphérique
-	**********************************/
+/**********************************
+Début Initialisation périphérique
+**********************************/
 
-	//Initialiser vos périphériques ici
-	
-	RCC->AHB1ENR |= (1 << 8); // Activation du périphérique GPIOI
-	GPIOI->MODER |= (1 << 0) | (1 << 4); // Mode du broche PI0 et PI2 en General purpose OUTPUT  
-	
-	RCC->APB1ENR |= (1 << 29); // Activation du périphérque DAC sur la pin 29
-	RCC->APB1ENR |= (3 << 8); // Mode du broche PA4 (DAC) en mode ANALOG sur la pin 8
-	DAC->CR |= (1 << 0); // Activation de la voie du DAC (EN1 car DAC_OUTPUT1) 
-	
-	init_servo();
-	init_sensor_ultrasons();
-	
-	RCC->AHB1ENR |= (1 << 5);	// Activation du GPIOF
-	RCC->APB2ENR |= (1 << 17); // Activation du TIM10_CH1
-	GPIOF->MODER |= (2 << 12); // PF6 en AF mode
-	GPIOF->AFR[0] |= (3 << 24); // PF6 en AF3
-	TIM10->CCMR1 |= (6 << 4); //
-	TIM10->CCER |= (1 << 0);
-	TIM10->PSC = 7;
-	TIM10->ARR = 39999;
-	TIM10->CR1 |= (1 << 0); // Demarrage du compteur
+//Initialiser vos périphériques ici
 
-	/**********************************
-	Fin Initialisation périphérique
-	**********************************/
+RCC->AHB1ENR |= (1 << 8); // Activation du périphérique GPIOI
+GPIOI->MODER |= (1 << 0) | (1 << 4); // Mode du broche PI0 et PI2 en General purpose OUTPUT  
 
-	/**********************************
-	Utilisation RTOS (Keil RTX5)
-	**********************************/
-	#ifdef RTE_CMSIS_RTOS2
-	  /* Initialize CMSIS-RTOS2 */
-	  osKernelInitialize ();
+RCC->APB1ENR |= (1 << 29); // Activation du périphérque DAC sur la pin 29
+RCC->APB1ENR |= (3 << 8); // Mode du broche PA4 (DAC) en mode ANALOG sur la pin 8
+DAC->CR |= (1 << 0); // Activation de la voie du DAC (EN1 car DAC_OUTPUT1)
 
-	  /* Create thread functions that start executing */
-		Init_Ethernet();
-		Init_GUIThread();
-		Init_TestThread();   // tâche de test (boucle avec osDelay)
+init_servo();
+init_sensor_ultrasons();
+init_interruption();
 
-	  /* Start thread execution */
-	  osKernelStart();
-	#endif
+RCC->AHB1ENR |= (1 << 5); // Activation du GPIOF
+RCC->APB2ENR |= (1 << 17); // Activation du TIM10_CH1
+GPIOF->MODER |= (2 << 12); // PF6 en AF mode
+GPIOF->AFR[0] |= (3 << 24); // PF6 en AF3
+TIM10->CCMR1 |= (6 << 4); //
+TIM10->CCER |= (1 << 0);
+TIM10->PSC = 7;
+TIM10->ARR = 39999;
+TIM10->CR1 |= (1 << 0); // Demarrage du compteur
+
+/**********************************
+Fin Initialisation périphérique
+**********************************/
+
+/**********************************
+Utilisation RTOS (Keil RTX5)
+**********************************/
+#ifdef RTE_CMSIS_RTOS2
+ /* Initialize CMSIS-RTOS2 */
+ osKernelInitialize ();
+
+ /* Create thread functions that start executing */
+Init_Ethernet();
+Init_GUIThread();
+Init_TestThread();   // tâche de test (boucle avec osDelay)
+
+ /* Start thread execution */
+ osKernelStart();
+#endif
 
   /* Infinite loop  (ne s'exécute pas avec le RTOS!!!)*/
   while (1)
@@ -121,65 +155,75 @@ int main(void)
 
 void init_servo(void) // A3
 {
-	RCC->AHB1ENR |= (1 << 5); // Activation du GPIOF
-	RCC->APB1ENR |= (1 << 7); // Activation du Timer 13 
-	
-	GPIOF->MODER |= (2 << 16); // Configuration du mode en alternate
-	GPIOF->AFR[1] |= (9 << 0); // Activation, du AF9
-	
-	TIM13->CCMR1 |= (6 << 4);
-	TIM13->CCER |= (1 << 0);
-	
-	TIM13->PSC = 31; // Après verif,
-	TIM13->ARR = 62499;
-	TIM13->CCR1 = 1500;
-	
-	TIM13->CR1 |= (1 << 0); //Demarrage du compteur 
+RCC->AHB1ENR |= (1 << 5); // Activation du GPIOF
+RCC->APB1ENR |= (1 << 7); // Activation du Timer 13
+
+GPIOF->MODER |= (2 << 16); // Configuration du mode en alternate
+GPIOF->AFR[1] |= (9 << 0); // Activation, du AF9
+
+TIM13->CCMR1 |= (6 << 4);
+TIM13->CCER |= (1 << 0);
+
+TIM13->PSC = 31; // Après verif,
+TIM13->ARR = 62499;
+TIM13->CCR1 = 1500;
+
+TIM13->CR1 |= (1 << 0); //Demarrage du compteur
 }
 
 void init_sensor_ultrasons(void) // D12
 {
-	RCC->AHB1ENR |= (1 << 1); // Activation du GPIOB
-	RCC->APB1ENR |= (1 << 6); // Activation du TIM12
-	
-	GPIOB->MODER |= (2 << 28); // Configuration en mode alternate
-	GPIOB->AFR[1] |= (9 << 24); // Activation du AF9
-	
-	TIM12->CCMR1 |= (6 << 4);
-	TIM12->CCER |= (1 << 0);
-	
-	TIM12->PSC = 39;
-	TIM12->ARR = 62499;
-	TIM12->CCR1 = 25;
-	TIM12->CR1 |= (1 << 0); // Demarrage du compteur 
+RCC->AHB1ENR |= (1 << 1); // Activation du GPIOB
+RCC->APB1ENR |= (1 << 6); // Activation du TIM12
+
+GPIOB->MODER |= (2 << 28); // Configuration en mode alternate
+GPIOB->AFR[1] |= (9 << 24); // Activation du AF9
+
+TIM12->CCMR1 |= (6 << 4);
+TIM12->CCER |= (1 << 0);
+
+TIM12->PSC = 39;
+TIM12->ARR = 62499;
+TIM12->CCR1 = 25;
+TIM12->CR1 |= (1 << 0); // Demarrage du compteur
 }
 
 
 void servo_set_angle(int deg)
 {
-	int result; 
-	
-	if(deg < 0) deg = 0;
-	if(deg > 180) deg = 180;
-	
-	result = 3125 + (deg*3125) / 180;
-	
-	TIM13->CCR1 = result;
+int result;
+
+if(deg < 0) deg = 0;
+if(deg > 180) deg = 180;
+
+result = 3125 + (deg*3125) / 180;
+
+TIM13->CCR1 = result;
 }
 
-void distance_cm(void)
+int distance_cm(void)
 {
+int  distance;
+int duree;
+
+duree = tempsFinal * 2 / 5;
+distance = duree / 58;
+
+return distance;
 }
 
 void init_interruption(void)
 {
-	RCC->AHB1ENR |= (1 << 6); // PG6 
-	RCC->APB2ENR |= (1 << 14); // Activation de SYSCFG
-	
-	SYSCFG->EXTICR[0] |= (6 << 0); // A verif 
-	EXTI->IMR |= (1 << 6);	// A verif
-	EXTI->RTSR |= (1 << 6); // A verif
-	EXTI->FTSR |= (1 << 6); // A verif
-	
-	EXTI->PR |= (1 << 6); // A verif
+RCC->AHB1ENR |= (1 << 6); // PG6
+RCC->APB2ENR |= (1 << 14); // Activation de SYSCFG
+
+SYSCFG->EXTICR[1] |= (6 << 8);  
+EXTI->IMR |= (1 << 6);
+EXTI->RTSR |= (1 << 6);
+EXTI->FTSR |= (1 << 6);
+
+NVIC_SetPriority(EXTI9_5_IRQn, 1);
+NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+//EXTI->PR |= (1 << 6); // A verif
 }
